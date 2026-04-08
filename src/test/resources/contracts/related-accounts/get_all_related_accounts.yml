@@ -1,0 +1,45 @@
+description: Get all related accounts
+name: get_all_related_accounts
+priority: 1
+request:
+  method: GET
+  url: /related-accounts
+  headers:
+    Accept: application/json
+response:
+  status: 200
+  headers:
+    Content-Type: application/json; charset=utf-8
+  body:
+    _embedded:
+      relatedAccounts:
+        - id: 1
+          activeSubaccount: "ACC001"
+          inactiveSubaccount: "ACC002"
+          activeScorecard: "SCORE001"
+          inactiveScorecard: "SCORE002"
+          masterAccountId: 100
+          relationshipType: "MAIN"
+          identityId: "550e8400-e29b-41d4-a716-446655440000"
+          accountType: 1
+          deleted: false
+    _links:
+      self:
+        href: "http://localhost:8080/related-accounts"
+  matchers:
+    body:
+      - path: "$._embedded.relatedAccounts[*].id"
+        type: by_regex
+        value: "[0-9]+"
+      - path: "$._embedded.relatedAccounts[*].activeSubaccount"
+        type: by_regex
+        value: ".+"
+      - path: "$._embedded.relatedAccounts[*].identityId"
+        type: by_regex
+        value: "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
+      - path: "$._embedded.relatedAccounts[*].accountType"
+        type: by_type
+        value: INTEGER
+      - path: "$._embedded.relatedAccounts[*].deleted"
+        type: by_type
+        value: BOOLEAN

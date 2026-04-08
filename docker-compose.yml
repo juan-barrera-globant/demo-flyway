@@ -52,6 +52,40 @@ services:
     ports:
       - "8080:8080"
     restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  contract-test-runner:
+    image: springcloud/spring-cloud-contract:4.2.2
+    container_name: contract-test-runner
+    ports:
+      - "8083:8083"
+    volumes:
+      - ./src/test/resources/contracts:/contracts:ro
+      - contract-test-reports:/reports
+    environment:
+      - STUBRUNNER_IDS=related-accounts-service
+      - STUBRUNNER_REPOSITORY_ROOT=file:/contracts/
+      - SERVER_PORT=8083
+      - SPRING_CLOUD_CONTRACT_VERIFIER_HTTP_BASEURL=http://spring-boot-app:8080
+      - APPLICATION_BASE_URL=http://spring-boot-app:8080
+      - PUBLISH_ARTIFACTS=false
+    depends_on:
+      app:
+        condition: service_healthy
+      db:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 1 bash -c 'cat < /dev/null > /dev/tcp/127.0.0.1/8083' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
 volumes:
   postgres_data:
+  contract-test-reports:

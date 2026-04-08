@@ -1,0 +1,32 @@
+description: Create a new related account
+name: create_related_account
+priority: 1
+request:
+  method: POST
+  url: /related-accounts
+  headers:
+    Content-Type: application/json
+  body:
+    activeSubaccount: "ACC001"
+    activeScorecard: "SCORE001"
+    identityId: "550e8400-e29b-41d4-a716-446655440000"
+    accountType: 1
+response:
+  status: 201
+  headers:
+    Content-Type: application/json; charset=utf-8
+  body:
+    id: 1
+    activeSubaccount: "ACC001"
+    activeScorecard: "SCORE001"
+    identityId: "550e8400-e29b-41d4-a716-446655440000"
+    accountType: 1
+    deleted: false
+  matchers:
+    body:
+      - path: "$.id"
+        type: by_regex
+        value: "[0-9]+"
+      - path: "$.activeSubaccount"
+        type: by_regex
+        value: ".+"

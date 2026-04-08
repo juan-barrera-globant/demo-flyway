@@ -1,0 +1,42 @@
+description: Get related account by ID
+name: get_related_account_by_id
+priority: 1
+request:
+  method: GET
+  url: /related-accounts/1
+  headers:
+    Accept: application/json
+response:
+  status: 200
+  headers:
+    Content-Type: application/json; charset=utf-8
+  body:
+    id: 1
+    activeSubaccount: "ACC001"
+    inactiveSubaccount: "ACC002"
+    activeScorecard: "SCORE001"
+    inactiveScorecard: "SCORE002"
+    masterAccountId: 100
+    relationshipType: "MAIN"
+    identityId: "550e8400-e29b-41d4-a716-446655440000"
+    accountType: 1
+    createdDttm: "2024-01-15T10:30:00Z"
+    updatedDttm: "2024-01-15T10:30:00Z"
+    deleted: false
+  matchers:
+    body:
+      - path: "$.id"
+        type: by_regex
+        value: "[0-9]+"
+      - path: "$.activeSubaccount"
+        type: by_regex
+        value: ".+"
+      - path: "$.identityId"
+        type: by_regex
+        value: "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
+      - path: "$.accountType"
+        type: by_type
+        value: INTEGER
+      - path: "$.deleted"
+        type: by_type
+        value: BOOLEAN
